@@ -18,7 +18,7 @@ public class Hook {
             if (envValue == null) {
                 return Matcher.quoteReplacement(matchResult.group(0));
             }
-            return envValue;
+            return Matcher.quoteReplacement(envValue);
         });
     }
 }
