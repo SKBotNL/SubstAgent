@@ -40,5 +40,6 @@ jobs:
     - name: Publish Release
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: ${{ steps.build.outputs.hash }}
         files: |
           build/libs/SubstAgent-${{ steps.build.outputs.hash }}.jar
