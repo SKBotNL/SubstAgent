@@ -21,4 +21,23 @@ public class Hook {
             return Matcher.quoteReplacement(envValue);
         });
     }
+
+    public static char[] substituteEnvVariables(char[] text) {
+        if (text == null) {
+            return null;
+        }
+
+        String textString = String.valueOf(text);
+
+        String replacedString = pattern.matcher(textString).replaceAll(matchResult -> {
+            String env = matchResult.group(1);
+            String envValue = System.getenv(env);
+            if (envValue == null) {
+                return Matcher.quoteReplacement(matchResult.group(0));
+            }
+            return Matcher.quoteReplacement(envValue);
+        });
+
+        return replacedString.toCharArray();
+    }
 }

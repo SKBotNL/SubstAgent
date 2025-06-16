@@ -30,6 +30,16 @@ class BufferedReaderTransformer implements ClassFileTransformer {
             readLineMethod.insertAfter(
                     "{ $_ = nl.skbotnl.substagent.Hook.substituteEnvVariables($_); }"
             );
+
+            CtClass[] paramTypes = {
+                    cp.get("char[]"),
+                    CtClass.intType,
+                    CtClass.intType
+            };
+            CtMethod readMethod = ctClass.getDeclaredMethod("read", paramTypes);
+            readMethod.insertAfter(
+                    "{ cbuf = nl.skbotnl.substagent.Hook.substituteEnvVariables(cbuf); }"
+            );
             byte[] byteCode = ctClass.toBytecode();
             ctClass.detach();
             return byteCode;

@@ -9,4 +9,3 @@ public class SubstAgent {
         inst.addTransformer(new BufferedReaderTransformer());
     }
 }
-
