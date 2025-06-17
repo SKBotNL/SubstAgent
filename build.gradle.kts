@@ -2,6 +2,7 @@ import java.io.BufferedReader
 
 plugins {
     id("com.gradleup.shadow") version "8.3.6"
+    id("com.diffplug.spotless") version "7.0.4"
     id("java")
 }
 
@@ -35,6 +36,7 @@ tasks.test {
 }
 
 tasks.build {
+    dependsOn(tasks.spotlessApply)
     dependsOn(tasks.shadowJar)
 }
 
@@ -51,4 +53,11 @@ tasks.jar {
         )
     }
     archiveClassifier.set("part")
+}
+
+spotless {
+    java {
+        removeUnusedImports()
+        palantirJavaFormat()
+    }
 }
