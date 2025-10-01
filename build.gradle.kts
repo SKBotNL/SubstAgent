@@ -6,24 +6,19 @@ plugins {
     id("java")
 }
 
-val commitHash = Runtime
-    .getRuntime()
-    .exec(arrayOf("git", "rev-parse", "--short=10", "HEAD"))
-    .let { process ->
+val commitHash =
+    Runtime.getRuntime().exec(arrayOf("git", "rev-parse", "--short=10", "HEAD")).let { process ->
         process.waitFor()
-        val output = process.inputStream.use {
-            it.bufferedReader().use(BufferedReader::readText)
-        }
+        val output = process.inputStream.use { it.bufferedReader().use(BufferedReader::readText) }
         process.destroy()
         output.trim()
     }
 
 group = "nl.skbotnl"
+
 version = commitHash
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
     implementation("org.javassist:javassist:3.30.2-GA")
@@ -31,9 +26,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+tasks.test { useJUnitPlatform() }
 
 tasks.build {
     dependsOn(tasks.spotlessApply)
@@ -46,12 +39,7 @@ tasks.shadowJar {
 }
 
 tasks.jar {
-    manifest {
-        attributes(
-            "Premain-Class" to "nl.skbotnl.substagent.SubstAgent",
-            "Implementation-Version" to version
-        )
-    }
+    manifest { attributes("Premain-Class" to "nl.skbotnl.substagent.SubstAgent", "Implementation-Version" to version) }
     archiveClassifier.set("part")
 }
 
@@ -59,5 +47,9 @@ spotless {
     java {
         removeUnusedImports()
         palantirJavaFormat()
+    }
+    kotlinGradle {
+        ktfmt().kotlinlangStyle().configure { it.setMaxWidth(120) }
+        target("build.gradle.kts", "settings.gradle.kts")
     }
 }
